@@ -1,3 +1,46 @@
+
+# [4.8.0-rc2]
+
+## Bug Fixes
+
+IonPage should be root page for Ionic Pages - fixes [#19146](https://github.com/ionic-team/ionic/issues/19146)
+
+## Breaking Changes
+
+### IonPage should be the parent component of Ionic Pages
+
+`IonPage` is a specialized component that is meant to be the parent container for an Ionic Page, which typically consists of `IonHeader` and `IonContent` components. Previous to RC3, the `@ionic/react-router` library would add this component itself, but this caused some confusion around how `IonPage` should be used and why it was even available. Devs would sometimes include `IonPage` themselves as the parent of their pages, but this could cause issues with page transitions.
+
+To clear up this confusion, we decided to stop adding the `IonPage` component in the framework and offer guidance that devs should use `IonPage` as the base component in their Ionic Pages.
+
+Apps migrating from a previous version to RC2 will need to make sure `IonPage` is used as the root component for every Ionic page. Ionic Pages typically have `IonHeader` and `IonContent` tags and are the components rendered by the routes. The starters used a React Fragment before, and this fragment needs to be changed to `IonPage`. Any other uses of `IonPage` should probably be removed.
+
+Example:
+
+An Ionic Page before RC2 most likely has a React fragment as its root:
+
+``` jsx
+<>
+  <IonHeader>/* header stuff */</IonHeader>
+  <IonContent>/* content stuff */</IonContent>
+</>
+```
+
+In RC2 and greater, the fragment should be updated to an IonPage component:
+
+``` jsx
+<IonPage>
+  <IonHeader>/* header stuff */</IonHeader>
+  <IonContent>/* content stuff */</IonContent>
+</IonPage>
+```
+
+### ViewManager
+
+The `<ViewManager />` component is no longer needed and can be removed. The views inside of an `<IonRouterOutlet>` are now managed by an internal stack manager and don't need the explicit ViewManager anymore.
+
+`ViewManager` is now a noop component and shows a warning message. It will be removed in the final release of @ionic/react.
+
 # [4.8.0-rc1]
 
 ## Features
